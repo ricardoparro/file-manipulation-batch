@@ -6,9 +6,9 @@ setlocal enabledelayedexpansion
 
 for /F %%b in ('dir C:\dropboxtest /b') do (
 	
-	
+	echo %%b
 
-	for /F %%f in ('dir C:\Users\ricar_000\Dropbox\pedidos\%%b /s /b') do (
+	for /F %%f in ('dir C:\dropboxtest\%%b /s /b') do (
 
 		echo %%f
 
@@ -17,19 +17,27 @@ for /F %%b in ('dir C:\dropboxtest /b') do (
 
 		if !prefix! == ok (
 			XCOPY "%%f" C:\robocopyTest\destination /Y
-		)
+
+		) else (
 
 		set prefixAux=!name:~0,5!
 
 		echo !prefixAux!
 
-		set order="%%b_"
+		echo !prefixAux!
 
-		rem if(!prefixAux! == !order!){}
+		set order=%%b_
+
+		echo !order!
+
+		if !prefixAux! == !order! (
+			XCOPY "%%f" C:\robocopyTest\destination /Y
+		)
 
 
 		rem if !prefixAux! == %%b_ (
 		rem )
+		)
 	)
 )
 
@@ -75,6 +83,18 @@ echo !prefix!
 
   del "C:\robocopyTest\destination\!name!.pdf"
   rem any commands can go here
+)
+
+echo !name!|findstr /r /c:"_Error-" >nul && (
+
+  del "C:\robocopyTest\destination\!name!.pdf"
+  rem any commands can go here
+) 
+
+echo !name!|findstr /r /c:"_Alert-" >nul && (
+
+  del "C:\robocopyTest\destination\!name!.pdf"
+  rem any commands can go here
 ) 
 
 )          
@@ -83,7 +103,6 @@ pause
 
 
 ::FOR /F "tokens=*" %%i in ('dir C:\Projects /AD /s /b') DO (
-
 
 
 ::echo "%%i"
