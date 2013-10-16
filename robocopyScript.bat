@@ -2,8 +2,8 @@
 
 setlocal enabledelayedexpansion
 
-set folderSource=C:\Users\ricar_000\Dropbox\pedidos
-set folderDestination=C:\robocopyTest\destination
+set folderSource=%3
+set folderDestination=%4
 
 for /F %%b in ('dir !folderSource! /b') do (
 
@@ -32,14 +32,15 @@ for /F %%b in ('dir !folderSource! /b') do (
 
 				) else (
 
-				set prefixAux=!name:~0,5!
+					set prefixAux=!name:~0,5!
 
-				set order=%%b_
+					set order=%%b_
 
-				if !prefixAux! == !order! (
-					XCOPY "%%f" !folderDestination! /Y
-				)
-
+					if !prefixAux! == !order! (
+						rem need to check if the file is already in the destination folder
+							XCOPY "%%f" !folderDestination! /Y
+						
+					)
 				)
 			)
 		)
