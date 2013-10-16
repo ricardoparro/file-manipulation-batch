@@ -2,113 +2,96 @@
 
 setlocal enabledelayedexpansion
 
+set folderSource=C:\Users\ricar_000\Dropbox\pedidos
+set folderDestination=C:\robocopyTest\destination
 
+for /F %%b in ('dir !folderSource! /b') do (
 
-for /F %%b in ('dir C:\dropboxtest /b') do (
-	
-	echo %%b
+	if %%b GTR %1 (
 
-	for /F %%f in ('dir C:\dropboxtest\%%b /s /b') do (
+		if %%b LSS %2 ( 
 
-		echo %%f
+			for /F %%f in ('dir !folderSource!\%%b /s /b') do (
+				set name=%%~nf
+				set prefix=!name:~0,2!
 
-		set name=%%~nf
-		set prefix=!name:~0,2!
+				if !prefix! == ok (
+					XCOPY "%%f" !folderDestination! /Y
+					
+					for /F %%k in ('dir !folderSource!\%%b /s /b') do (
 
-		if !prefix! == ok (
-			XCOPY "%%f" C:\robocopyTest\destination /Y
+						set nameAux=%%~nk
+			
+						set prefixAux=!nameAux:~0,5!
+						
+						if !prefixAux! == %%b_ (
+							ren "!folderDestination!\!name!.pdf" "!nameAux!.pdf"
+						) 
+						set order=%%k_ 
+					)
 
-		) else (
+				) else (
 
-		set prefixAux=!name:~0,5!
+				set prefixAux=!name:~0,5!
 
-		echo !prefixAux!
+				set order=%%b_
 
-		echo !prefixAux!
+				if !prefixAux! == !order! (
+					XCOPY "%%f" !folderDestination! /Y
+				)
 
-		set order=%%b_
-
-		echo !order!
-
-		if !prefixAux! == !order! (
-			XCOPY "%%f" C:\robocopyTest\destination /Y
-		)
-
-
-		rem if !prefixAux! == %%b_ (
-		rem )
+				)
+			)
 		)
 	)
 )
 
+for /F %%f in ('dir !folderDestination! /s /b') do (
 
-  pause
+	set name=%%~nf
+	set prefix=!name:~0,2!
 
-for /F %%f in ('dir C:\robocopyTest\destination /s /b') do (
-
-set name=%%~nf
-set prefix=!name:~0,2!
-
-
-echo !prefix!
-
-	if !prefix! == ok (
-	echo entrou
-	pause
-		set oldname= %%~nf
-
-		set newname=!oldname:~3!
+		if !prefix! == ok (
 		
-	 
-		del "C:\robocopyTest\destination\!newname!.pdf"
-	
-		ren "%%f" "!newname!.pdf"
-	
-	)
+			set oldname= %%~nf
+
+			set newname=!oldname:~3!
+		
+			ren "%%f" "!newname!.pdf"
+		
+		)
 
 
 	echo !name!|findstr /r /c:"etiqueta" >nul && (
 
-  del "C:\robocopyTest\destination\!name!.pdf"
-  rem any commands can go here
-) 
+	  del "!folderDestination!\!name!.pdf"
+	  rem any commands can go here
+	) 
 
 	echo !name!|findstr /r /c:"factsheet" >nul && (
- 
-  del "C:\robocopyTest\destination\!name!.pdf"
-  rem any commands can go here
-) 
+	 
+	  del "!folderDestination!\!name!.pdf"
+	  rem any commands can go here
+	) 
 
 	echo !name!|findstr /r /c:"INVOICE" >nul && (
 
-  del "C:\robocopyTest\destination\!name!.pdf"
-  rem any commands can go here
-)
+	  del "!folderDestination!\!name!.pdf"
+	  rem any commands can go here
+	)
 
-echo !name!|findstr /r /c:"_Error-" >nul && (
+	echo !name!|findstr /r /c:"_Error-" >nul && (
 
-  del "C:\robocopyTest\destination\!name!.pdf"
-  rem any commands can go here
-) 
+	  del "!folderDestination!\!name!.pdf"
+	  rem any commands can go here
+	) 
 
-echo !name!|findstr /r /c:"_Alert-" >nul && (
+	echo !name!|findstr /r /c:"_Alert-" >nul && (
 
-  del "C:\robocopyTest\destination\!name!.pdf"
-  rem any commands can go here
-) 
+	  del "!folderDestination!\!name!.pdf"
+	  rem any commands can go here
+	) 
 
 )          
 
 pause
-
-
-::FOR /F "tokens=*" %%i in ('dir C:\Projects /AD /s /b') DO (
-
-
-::echo "%%i"
-
-
-::REM XCOPY "%%i\*.jpg" C:\robocopyTest /Y 
-
-
-::)
