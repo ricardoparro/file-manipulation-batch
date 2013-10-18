@@ -38,7 +38,36 @@ for /F %%b in ('dir !folderSource! /b') do (
 
 					if !prefixAux! == !order! (
 						rem need to check if the file is already in the destination folder
+						
+
+
+						set inDestination=0
+						echo entrou no ifclause !inDestination! 
+							pause
+
+
+						for /F %%a in ('dir !folderDestination! /b') do (
+							echo entrou no forcicle 
+							pause
+							echo %%a
+							set nameDestination=%%~na
+							set prefixNameDestination=!nameDestination:~0,4!
+							set prefixNameSource=!name:~0,4!
+							echo !prefixNameDestination!
+							echo !prefixNameSource!
+							pause
+							if !prefixNameDestination! == !prefixNameSource! (
+
+								set inDestination=1
+
+								)
+						)
+
+
+						if !inDestination! == 0 (
 							XCOPY "%%f" !folderDestination! /Y
+							pause
+							)
 						
 					)
 				)
