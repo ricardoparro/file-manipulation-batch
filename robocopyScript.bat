@@ -15,21 +15,23 @@ for /F %%b in ('dir !folderSource! /b') do (
 				set name=%%~nf
 				set prefix=!name:~0,2!
 
+				rem if the file is an altered file copy it to the source destination 
 				if !prefix! == ok (
 					XCOPY "%%f" !folderDestination! /Y
-					
+				
+
 					for /F %%k in ('dir !folderSource!\%%b /s /b') do (
 
 						set nameAux=%%~nk
 			
 						set prefixAux=!nameAux:~0,5!
 						
+						rem rename the altered file to the original file name 
 						if !prefixAux! == %%b_ (
 							ren "!folderDestination!\!name!.pdf" "!nameAux!.pdf"
 						) 
 						set order=%%k_ 
 					)
-
 				) else (
 
 					set prefixAux=!name:~0,5!
@@ -39,12 +41,9 @@ for /F %%b in ('dir !folderSource! /b') do (
 					if !prefixAux! == !order! (
 						rem need to check if the file is already in the destination folder
 						
-
-
 						set inDestination=0
 						echo entrou no ifclause !inDestination! 
-							pause
-
+						pause
 
 						for /F %%a in ('dir !folderDestination! /b') do (
 							echo entrou no forcicle 
@@ -57,18 +56,14 @@ for /F %%b in ('dir !folderSource! /b') do (
 							echo !prefixNameSource!
 							pause
 							if !prefixNameDestination! == !prefixNameSource! (
-
 								set inDestination=1
-
-								)
+							)
 						)
-
 
 						if !inDestination! == 0 (
 							XCOPY "%%f" !folderDestination! /Y
 							pause
-							)
-						
+						)
 					)
 				)
 			)
